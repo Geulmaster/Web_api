@@ -1,7 +1,6 @@
 <div class="container">
     <h2>Mashigane</h2>
     <form action="" method="post" role="form">
-        { { form.csrf }}
     <div class="form-group">
           <label for="name">Name:</label>
     <input type="text" class="form-control" id="name" name="name" placeholder="What's your name?">
@@ -11,6 +10,10 @@
     
     <label for="password">Password:</label>
     <input type="password" class="form-control" id="password" name="password" placeholder="Enter a password.">
+
+    <label for="Gender">Gender:</label>
+    <input type="radio" name="options" id="1" value="Male"> Male </input><br>
+    <input type="radio" name="options" id="2" value="Female"> Female </input><br>
     
     </div>
     <button type="submit" class="btn btn-success">Sign Up</button>
@@ -24,8 +27,6 @@
     {% endif %}
     
     {% if "Error" in message[1]: %}
-    <div class="alert alert-warning">
-                    { { message[1] }}</div>
     {% endif %}
     {% endfor %}
     {% endif %}

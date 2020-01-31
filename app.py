@@ -6,9 +6,9 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = '7d441f27d441f27567d441f2b6176a'
 
 class ReusableForm(Form):
-    name = TextField('Name:', validators=[validators.required()])
-    email = TextField('Email:', validators=[validators.required(), validators.Length(min=6, max=35)])
-    password = TextField('Password:', validators=[validators.required(), validators.Length(min=3, max=35)])
+    name = TextField('Name:', validators=[validators.DataRequired()])
+    email = TextField('Email:', validators=[validators.DataRequired(), validators.Length(min=6, max=35)])
+    password = TextField('Password:', validators=[validators.DataRequired(), validators.Length(min=3, max=35)])
     
     @app.route("/", methods=['GET', 'POST'])
     def hello():
@@ -19,7 +19,8 @@ class ReusableForm(Form):
             name=request.form['name']
             password=request.form['password']
             email=request.form['email']
-            print(name, " ", email, " ", password) # In future projects I can jsonify these details
+            gender = request.form['options']
+            print(name, email, password, gender) # In future projects I can jsonify these details
     
         if form.validate():
             flash('Thanks for registration ' + name)
@@ -30,7 +31,6 @@ class ReusableForm(Form):
     
 @app.route("/about")
 def about():
-
     return render_template("about.html")
 
 if __name__ == "__main__":
