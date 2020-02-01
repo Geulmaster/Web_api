@@ -8,14 +8,14 @@ mongo = PyMongo(app)
 
 app.config['SECRET_KEY'] = '7d441f27d441f27567d441f2b6176a'
 
-class ReusableForm(Form):
+class Details(Form):
     name = TextField('Name:', validators=[validators.DataRequired()])
     email = TextField('Email:', validators=[validators.DataRequired(), validators.Length(min=6, max=35)])
     password = TextField('Password:', validators=[validators.DataRequired(), validators.Length(min=3, max=35)])
     
     @app.route("/", methods=['GET', 'POST'])
     def hello():
-        form = ReusableForm(request.form)
+        form = Details(request.form)
     
         print(form.errors)
         if request.method == 'POST':
@@ -23,6 +23,10 @@ class ReusableForm(Form):
             password=request.form['password']
             email=request.form['email']
             gender = request.form['options']
+
+            user_collection = mongo.db.users
+            user_collection.insert_one({'name' : name, 'email' : email})
+            
             print(name, email, password, gender) # In future projects I can jsonify these details
     
         if form.validate():
@@ -39,14 +43,14 @@ def about():
 @app.route("/data")
 def data():
     user_collection = mongo.db.users
-    user_collection.insert_one({'name' : 'sas'})
+    user_collection.insert_one({'name' : 'Salmi', 'email' : 'Python'})
     return '<h1>Added</h1>'
 
 @app.route("/find")
 def find():
     user_collection = mongo.db.users
-    user = user_collection.find_one({'name' : 'sas'})
-    return f'<h1>User: { user["name"] }</h1>'
+    user = user_collection.find_one({'name' : 'op'})
+    return f'<h1>User: { user["name"] } <br> Email: { user["email"] }</h1>'
 
 if __name__ == "__main__":
     app.run(debug=True)
