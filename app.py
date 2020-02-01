@@ -1,7 +1,10 @@
-from flask import Flask, render_template, flash, request  
+from flask import Flask, render_template, flash, request, Blueprint  
+from flask_pymongo import PyMongo
 from wtforms import Form, TextField, TextAreaField, validators, StringField, SubmitField
 
 app = Flask(__name__)
+app.config["MONGO_URI"] = "mongodb://localhost:27017/myDatabase"
+mongo = PyMongo(app)
 
 app.config['SECRET_KEY'] = '7d441f27d441f27567d441f2b6176a'
 
@@ -32,6 +35,12 @@ class ReusableForm(Form):
 @app.route("/about")
 def about():
     return render_template("about.html")
+
+@app.route("/data")
+def data():
+    user_collection = mongo.db.users
+    user_collection.insert_one({'name' : 'sas'})
+    return '<h1>Added</h1>'
 
 if __name__ == "__main__":
     app.run(debug=True)
