@@ -42,6 +42,11 @@ def data():
     user_collection.insert_one({'name' : 'sas'})
     return '<h1>Added</h1>'
 
+@app.route("/find")
+def find():
+    user_collection = mongo.db.users
+    user = user_collection.find_one({'name' : 'sas'})
+    return f'<h1>User: { user["name"] }</h1>'
+
 if __name__ == "__main__":
     app.run(debug=True)
-    
