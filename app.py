@@ -49,8 +49,23 @@ def data():
 @app.route("/find")
 def find():
     user_collection = mongo.db.users
-    user = user_collection.find_one({'name' : 'op'})
+    user = user_collection.find_one({'name' : 'sasa'})
     return f'<h1>User: { user["name"] } <br> Email: { user["email"] }</h1>'
+
+@app.route("/update")
+def update():
+    user_collection = mongo.db.users
+    user = user_collection.find_one({'name' : 'sasa'})
+    user["email"] = "Hotok"
+    user_collection.save(user)
+    return '<h1>Updated User!</h1>'
+
+@app.route("/delete")
+def delete():
+    user_collection = mongo.db.users
+    user = user_collection.find_one({'name' : 'sasa'}) #TODO: make generic function of these two lines of definition
+    user_collection.remove(user)
+    return '<h1>Deleted User!</h1>'
 
 if __name__ == "__main__":
     app.run(debug=True)
