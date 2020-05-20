@@ -16,8 +16,8 @@ class Details(Form):
     @app.route("/", methods=['GET', 'POST'])
     def hello():
         form = Details(request.form)
-    
         print(form.errors)
+
         if request.method == 'POST':
             name=request.form['name']
             password=request.form['password']
@@ -25,7 +25,7 @@ class Details(Form):
             gender = request.form['options']
 
             user_collection = mongo.db.users
-            user_collection.insert_one({'name' : name, 'email' : email})
+            user_collection.insert_one({'name' : name, 'email' : email, 'password' : password, 'gender': gender})
             
             print(name, email, password, gender) # In future projects I can jsonify these details
     
@@ -40,30 +40,30 @@ class Details(Form):
 def about():
     return render_template("about.html")
 
-@app.route("/data")
-def data():
+@app.route("/add/<name>")
+def add(name):
     user_collection = mongo.db.users
-    user_collection.insert_one({'name' : 'Salmi', 'email' : 'Python'})
+    user_collection.insert_one({'name' : str(name), 'email' : 'Python'})
     return '<h1>Added</h1>'
 
-@app.route("/find")
-def find():
+@app.route("/find/<name>")
+def find(name):
     user_collection = mongo.db.users
-    user = user_collection.find_one({'name' : 'sasa'})
+    user = user_collection.find_one({'name' : name})
     return f'<h1>User: { user["name"] } <br> Email: { user["email"] }</h1>'
 
-@app.route("/update")
-def update():
+@app.route("/update/<name>/<newName>")
+def update(name, newName):
     user_collection = mongo.db.users
-    user = user_collection.find_one({'name' : 'sasa'})
-    user["email"] = "Hotok"
+    user = user_collection.find_one({'name' : name})
+    user["name"] = newName
     user_collection.save(user)
-    return '<h1>Updated User!</h1>'
+    return f'<h1>Updated username to {newName}!</h1>'
 
-@app.route("/delete")
-def delete():
+@app.route("/delete/<name>")
+def delete(name):
     user_collection = mongo.db.users
-    user = user_collection.find_one({'name' : 'sasa'}) #TODO: make generic function of these two lines of definition
+    user = user_collection.find_one({'name' : name})
     user_collection.remove(user)
     return '<h1>Deleted User!</h1>'
 
