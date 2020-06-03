@@ -1,4 +1,4 @@
-from flask import Flask, render_template, flash, request, Blueprint  
+from flask import Flask, render_template, flash, request, Blueprint 
 from flask_pymongo import PyMongo
 from wtforms import Form, TextField, TextAreaField, validators, StringField, SubmitField
 
@@ -66,6 +66,15 @@ def delete(name):
     user = user_collection.find_one({'name' : name})
     user_collection.remove(user)
     return '<h1>Deleted User!</h1>'
+
+@app.route("/args", methods=['GET'])
+def args():
+    """
+    Receives ID and returns it
+    """
+    poop = request.args.get('id', None)
+    print(poop)
+    return '<h1>{}</h1>'.format(poop)
 
 if __name__ == "__main__":
     app.run(debug=True)
