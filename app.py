@@ -1,7 +1,8 @@
 from flask import Flask, render_template, flash, request 
 from flask_pymongo import PyMongo
 from wtforms import Form, TextField, TextAreaField, validators, StringField, SubmitField
-from utils.handler import read_config
+from utils.handler import read_config, JSONEncoder
+import json
 
 app = Flask(__name__)
 app.config["MONGO_URI"] = read_config()
@@ -66,11 +67,24 @@ def delete(name):
 @app.route("/args", methods=['GET'])
 def args():
     """
-    Receives ID and returns it
+    Receives ID and returns it:
+    http://127.0.0.1:5000/args?id=654321 returns 654321
     """
     args_method = request.args.get('id', None)
     print(args_method)
     return f'<h1>{args_method}</h1>'
+
+@app.route("/find")
+def find_users():
+    docs = []
+    str_docs = []
+    cursor = user_collection.find()
+    for doc in cursor: docs.append(doc)
+    for i in docs:
+        str_doc = JSONEncoder().encode(i)
+        str_docs.append(str_doc)
+    formatted_str_docs = "\n".join(str_docs)
+    return render_template("details.html", msg = formatted_str_docs)
 
 if __name__ == "__main__":
     app.run(debug=True)
