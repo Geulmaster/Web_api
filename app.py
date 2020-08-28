@@ -2,7 +2,6 @@ from flask import Flask, render_template, flash, request
 from flask_pymongo import PyMongo
 from wtforms import Form, TextField, TextAreaField, validators, StringField, SubmitField
 from utils.handler import read_config, JSONEncoder
-import json
 
 app = Flask(__name__)
 app.config["MONGO_URI"] = read_config()
