@@ -86,4 +86,4 @@ def find_users():
     return render_template("details.html", msg = formatted_str_docs)
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=False)
