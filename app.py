@@ -1,6 +1,6 @@
 from flask import Flask, render_template, flash, request 
-from flask_pymongo import PyMongo
-from wtforms import Form, TextField, TextAreaField, validators, StringField, SubmitField
+from flask_pymongo import PyMongo #TODO: Refactor to pymongo usage instead of flask_pymongo
+from wtforms import Form, TextField, validators
 from utils.handler import read_config, JSONEncoder
 
 app = Flask(__name__)
@@ -9,9 +9,10 @@ mongo = PyMongo(app)
 
 app.config['SECRET_KEY'] = '7d441f27d441f27567d441f2b6176a'
 
-user_collection = mongo.db.users
+user_collection = mongo.db.admin
 
 class Details(Form):
+    
     name = TextField('Name:', validators=[validators.DataRequired()])
     email = TextField('Email:', validators=[validators.DataRequired(), validators.Length(min=6, max=35)])
     password = TextField('Password:', validators=[validators.DataRequired(), validators.Length(min=3, max=35)])
@@ -84,6 +85,16 @@ def find_users():
         str_docs.append(str_doc)
     formatted_str_docs = "\n".join(str_docs)
     return render_template("details.html", msg = formatted_str_docs)
+
+@app.route("/delete/<name>", methods=["DELETE"])
+def delete_user(name):
+    user = user_collection.find_one({'name' : name})
+    if user:
+        user_collection.remove(user)
+        return render_template("details.html", msg =  f'User {name} has been deleted successfuly') 
+    else:
+        return render_template("details.html", msg = f'Did not find {name}')
+
 
 if __name__ == "__main__":
     app.run(debug=True, port=80)
